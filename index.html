@@ -3,59 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سامانه تحلیل چارت آسترولوژی (مبتنی بر سیارات)</title>
+    <title>سامانه جامع تحلیل چارت آسترولوژی و پرونده نفس</title>
+    <!-- Vazirmatn Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
         :root {
             --primary-color: #1e293b;
             --accent-color: #d97706;
+            --accent-hover: #b45309;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --border-color: #e2e8f0;
+            --text-color: #0f172a;
+            --warning-bg: #fffbeb;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --primary-color: #38bdf8;
+            --accent-color: #f59e0b;
+            --accent-hover: #d97706;
+            --warning-bg: #78350f;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: background-color 0.2s, color 0.2s;
         }
 
         body {
-            font-family: 'Tahoma', 'Segoe UI', sans-serif;
             background-color: var(--bg-color);
-            color: #0f172a;
+            color: var(--text-color);
             margin: 0;
             padding: 15px;
             direction: rtl;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
+        /* Header */
         .header {
             text-align: center;
-            background: var(--primary-color);
+            background: #1e293b;
             color: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
         }
 
-        .header h2 { margin: 0 0 5px 0; font-size: 1.25rem; }
-        .header p { margin: 0; font-size: 0.85rem; color: #cbd5e1; }
+        .header h2 { margin: 0 0 5px 0; font-size: 1.4rem; color: #f59e0b; }
+        .header p { margin: 2px 0; font-size: 0.85rem; color: #cbd5e1; }
+        
+        .theme-btn {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: #334155;
+            color: #fff;
+            border: 1px solid #475569;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
 
-        .client-info-card {
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
             background: var(--card-bg);
-            padding: 18px;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Cards & Forms */
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             border: 1px solid var(--border-color);
             margin-bottom: 20px;
         }
 
-        .client-info-card h3 {
+        .card h3 {
             margin-top: 0;
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
+            font-size: 1.15rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 8px;
+            margin-bottom: 15px;
         }
 
         .form-row {
@@ -65,55 +134,32 @@
         }
 
         @media (min-width: 768px) {
-            .form-row { grid-template-columns: 1fr 1fr 1fr; }
+            .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+            .form-row-2 { grid-template-columns: 1fr 1fr; }
+            .form-row-4 { grid-template-columns: repeat(4, 1fr); }
         }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .grid-layout { grid-template-columns: 1fr 1fr; }
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .card h3 {
-            margin-top: 0;
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 8px;
-        }
-
-        .form-group { margin-bottom: 12px; }
+        .form-group { margin-bottom: 15px; }
 
         label {
             display: block;
             font-weight: bold;
             font-size: 0.85rem;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
-        input[type="text"], select, button, textarea {
+        input[type="text"], input[type="number"], select, textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 0.9rem;
+            background: var(--card-bg);
+            color: var(--text-color);
             box-sizing: border-box;
-            font-family: inherit;
         }
 
-        select:focus, textarea:focus, input:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent-color);
         }
@@ -123,57 +169,66 @@
             color: white;
             font-weight: bold;
             border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.2s;
-            margin-top: 5px;
+            width: 100%;
+            font-size: 0.95rem;
         }
 
-        button.btn-primary:hover { background-color: #b45309; }
+        button.btn-primary:hover { background-color: var(--accent-hover); }
 
         button.btn-success {
             background-color: #10b981;
             color: white;
             font-weight: bold;
             border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
+            width: 100%;
         }
 
         button.btn-success:hover { background-color: #059669; }
 
-        .output-box {
-            background: #fffbeb;
-            border-right: 4px solid var(--accent-color);
-            padding: 12px;
-            margin-top: 15px;
-            border-radius: 4px;
-        }
-
-        .step-item {
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            background: #ffffff;
-            padding: 6px 10px;
+        .dignity-badge {
+            display: inline-block;
+            padding: 4px 10px;
             border-radius: 6px;
-            border: 1px solid #fef3c7;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+        .dignity-ruling { background: #dcfce7; color: #15803d; }
+        .dignity-exaltation { background: #e0f2fe; color: #0369a1; }
+        .dignity-detriment { background: #ffedd5; color: #c2410c; }
+        .dignity-fall { background: #ffe4e6; color: #be123c; }
+        .dignity-combustion { background: #fef3c7; color: #d97706; margin-right: 5px; }
+
+        .output-box {
+            background: var(--warning-bg);
+            border-right: 4px solid var(--accent-color);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
         }
 
         .planet-status-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
             margin-top: 15px;
         }
 
         .planet-btn {
-            padding: 10px 8px;
-            text-align: right;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .planet-btn.active {
@@ -182,27 +237,58 @@
             border-color: #0369a1;
         }
 
-        .planet-btn .status-tag {
-            font-size: 0.75rem;
-            display: block;
-            margin-top: 4px;
-            opacity: 0.9;
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .export-section {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px dashed var(--border-color);
+        .element-card {
+            background: var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
         }
-        
-        .datetime-badge {
-            background: #334155;
-            color: #f1f5f9;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            margin-top: 6px;
-            display: inline-block;
+
+        .summary-box {
+            background-color: var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .backup-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+
+        @media print {
+            .tabs, .theme-btn, button, .no-print { display: none !important; }
+            body { background: white; color: black; }
+            .card { border: none; box-shadow: none; padding: 0; }
         }
     </style>
 </head>
@@ -210,227 +296,476 @@
 
 <div class="container">
     <div class="header">
-        <h2>📘 سامانه تحلیل چارت آسترولوژی</h2>
-        <p>مبتنی بر: آموزه‌های استاد صالحی</p>
-        <p style="margin-top: 4px; font-size: 0.85rem; color: #fbbf24;">تهیه‌کننده: حسین مسعودیان</p>
-        <div class="datetime-badge">⏰ زمان فعلی سیستم: <span id="live-datetime">--:--</span></div>
+        <button class="theme-btn" onclick="toggleTheme()">🌙 حالت شب / روز</button>
+        <h2>📘 سامانه جامع تحلیل چارت آسترولوژی و پرونده نفس</h2>
+        <p>مبتنی بر آموزههای استاد صالحی | گردآوری و تنظیم: حسین مسعودیان</p>
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px;">⏰ زمان سیستم: <span id="clock">--:--</span></p>
     </div>
 
     <!-- مشخصات فردی -->
-    <div class="client-info-card">
-        <h3>👤 مشخصات فردی (صاحب چارت)</h3>
-        <div class="form-row">
+    <div class="card">
+        <h3>👤 مشخصات فردی و مدیریت پشتیبانگیری</h3>
+        <div class="form-row form-row-3">
             <div class="form-group">
                 <label>نام و نام خانوادگی:</label>
                 <input type="text" id="client-name" placeholder="مثلاً: حسین مسعودیان" onchange="saveClientInfo()">
             </div>
             <div class="form-group">
                 <label>تاریخ تولد:</label>
-                <input type="text" id="client-dob" placeholder="مثلاً: ۱۴۰۵/۰۶/۱۵" onchange="saveClientInfo()">
+                <input type="text" id="client-dob" placeholder="مثلاً: ۱۳۶۳/۰۶/۲۸" onchange="saveClientInfo()">
             </div>
             <div class="form-group">
                 <label>ساعت و محل تولد:</label>
-                <input type="text" id="client-tob" placeholder="مثلاً: ۱۴:۳۰ - تهران" onchange="saveClientInfo()">
+                <input type="text" id="client-tob" placeholder="مثلاً: گرگان" onchange="saveClientInfo()">
+            </div>
+        </div>
+        <div class="backup-section no-print">
+            <button class="btn-primary" style="background-color: #0284c7;" onclick="exportBackupJSON()">📥 ذخیره فایل پشتیبان چارت (JSON)</button>
+            <input type="file" id="import-file" style="display:none" onchange="importBackupJSON(event)">
+            <button class="btn-primary" style="background-color: #475569;" onclick="document.getElementById('import-file').click()">📤 بارگذاری فایل پشتیبان</button>
+        </div>
+    </div>
+
+    <!-- تبها -->
+    <div class="tabs no-print">
+        <button class="tab-btn active" onclick="switchTab('tab-planets', event)">۱. جاگذاری سیارات و استلیوم</button>
+        <button class="tab-btn" onclick="switchTab('tab-aspects', event)">۲. تحلیل جنبهها (Aspects)</button>
+        <button class="tab-btn" onclick="switchTab('tab-temperament', event)">۳. عناصر، کیفیتها و نیمکرهها</button>
+        <button class="tab-btn" onclick="switchTab('tab-full-mezag', event)">۴. سامانه کامل مزاجشناسی</button>
+        <button class="tab-btn" onclick="switchTab('tab-report', event)">📄 گزارش پرونده نفس (جلسه ۱۱)</button>
+    </div>
+
+    <!-- تب ۱: سیارات و استلیوم -->
+    <div id="tab-planets" class="tab-content active">
+        <div class="form-row form-row-2">
+            <div class="card">
+                <h3>تنظیمات سیاره / نقطه</h3>
+                <div class="form-group">
+                    <label>انتخاب سیاره یا نقطه کلیدی:</label>
+                    <select id="select-planet" onchange="onPlanetSelectChange()"></select>
+                </div>
+                <div class="form-group">
+                    <label>برج قرارگیری:</label>
+                    <select id="select-sign" onchange="checkPlanetDignity()"></select>
+                </div>
+                <div id="dignity-output"></div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>خانه قرارگیری (۱ تا ۱۲):</label>
+                    <select id="select-house"></select>
+                </div>
+
+                <!-- بخش سنجش احتراق -->
+                <div class="form-group" id="combustion-box" style="background: #fff7ed; border: 1px solid #fdba74; padding: 10px; border-radius: 8px; margin-top: 10px; display: none;">
+                    <label style="color: #c2410c;">🔥 بررسی زاویه و احتراق با خورشید:</label>
+                    <small style="display:block; color:#9a3412; margin-bottom:5px;">اگر فاصله این سیاره با خورشید کمتر از ۸ تا ۱۰ درجه باشد، دچار احتراق شده است.</small>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="checkbox" id="is-combust" style="width:auto;" onchange="generatePlanetAnalysis()">
+                        <label for="is-combust" style="margin:0; cursor:pointer;">این سیاره دچار احتراق (Combustion) شده است.</label>
+                    </div>
+                </div>
+
+                <button class="btn-primary" style="margin-top:15px;" onclick="generatePlanetAnalysis()">تولید تحلیل و پیشنهاد</button>
+
+                <div class="output-box" id="planet-analysis-preview" style="display:none;">
+                    <label style="font-weight:bold; color:#92400e;">تحلیل استخراجشده:</label>
+                    <textarea id="planet-final-text" rows="8"></textarea>
+                    <button class="btn-success" onclick="savePlanetData()">💾 ثبت این سیاره در پرونده</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>وضعیت نقاط چارت ثبتشده و استلیوم</h3>
+                <p style="font-size:0.8rem; color:#64748b;">سیارات ثبتشده در چارت (تمرکز ۳ سیاره یا بیشتر در یک خانه = استلیوم):</p>
+                <div id="stellium-alert" style="margin-bottom:10px;"></div>
+                <div class="planet-status-grid" id="planet-grid"></div>
             </div>
         </div>
     </div>
 
-    <div class="grid-layout">
-        <!-- فرم تنظیمات سیاره -->
+    <!-- تب ۲: جنبهها -->
+    <div id="tab-aspects" class="tab-content">
         <div class="card">
-            <h3>۱. تحلیل و جاگذاری سیاره</h3>
-
-            <!-- ۱. انتخاب سیاره اصلی -->
-            <div class="form-group">
-                <label>۱. انتخاب سیاره (موضوع اصلی):</label>
-                <select id="select-planet" onchange="loadPlanetDataIfExist()"></select>
+            <h3>ثبت و تحلیل جنبه بین سیارات / نقاط (شامل AC و MC)</h3>
+            <p style="font-size:0.85rem; color:#64748b;">(اورب مجاز: جنبههای عادی حدود ۸ درجه، خورشید و ماه تا ۱۰ درجه)</p>
+            <div class="form-row form-row-3">
+                <div class="form-group">
+                    <label>سیاره / نقطه اول:</label>
+                    <select id="aspect-p1"></select>
+                </div>
+                <div class="form-group">
+                    <label>نوع جنبه / زاویه:</label>
+                    <select id="aspect-type"></select>
+                </div>
+                <div class="form-group">
+                    <label>سیاره / نقطه دوم:</label>
+                    <select id="aspect-p2"></select>
+                </div>
             </div>
+            <button class="btn-primary" onclick="analyzeAspect()">بررسی مشخصات و تولید تفسیر جنبه</button>
 
-            <!-- ۲. برج -->
-            <div class="form-group">
-                <label>۲. قرارگیری در برج (سبک و مزاج):</label>
-                <select id="select-sign"></select>
-            </div>
-
-            <!-- ۳. خانه -->
-            <div class="form-group">
-                <label>۳. قرارگیری در خانه (عرصه زندگی از ۱ تا ۱۲):</label>
-                <select id="select-house"></select>
-            </div>
-
-            <!-- ۴. جنبه ها و الگوها -->
-            <div class="form-group">
-                <label>۴. جنبه / الگوی نجومی (اختیاری):</label>
-                <select id="select-aspect">
-                    <option value="">-- بدون جنبه (تفسیر سه‌گانه ساده) --</option>
-                </select>
-            </div>
-
-            <button class="btn-primary" onclick="generateAnalysis()">تولید متن تحلیل</button>
-
-            <div class="output-box" id="analysis-preview" style="display:none;">
-                <label style="color: #92400e; font-weight:bold;">تحلیل گام‌به‌گام و بستر مزاجی:</label>
-                <div id="step-by-step" style="margin-top:6px;"></div>
-
-                <label style="margin-top: 10px; font-weight:bold;">ترکیب و ویرایش نهایی شما:</label>
-                <textarea id="final-user-text" rows="9"></textarea>
-
-                <button class="btn-success" onclick="savePlanetData()">💾 ثبت و ذخیره برای این سیاره</button>
+            <div class="output-box" id="aspect-preview" style="display:none;">
+                <h4>جزئیات جنبه و مشخصات نقاط:</h4>
+                <div id="aspect-details" style="background:#fff; padding:10px; border-radius:6px; border:1px solid #fed7aa; margin-bottom:10px; font-size:0.88rem; line-height:1.7;"></div>
+                <button class="btn-success" onclick="saveAspectData()">💾 افزودن این جنبه به لیست چارت</button>
             </div>
         </div>
 
-        <!-- وضعیت ۱۰ سیاره -->
         <div class="card">
-            <h3>۲. وضعیت ۱۰ سیاره چارت</h3>
-            <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">روی هر سیاره کلیک کنید تا تنظیمات آن بازخوانی و ویرایش شود:</p>
+            <h3>لیست جنبههای ثبتشده به همراه تحلیل تفصیلی (با قابلیت حذف)</h3>
+            <div id="saved-aspects-list"><p style="font-size:0.85rem; color:#94a3b8;">هنوز جنبهای ثبت نشده است.</p></div>
+        </div>
+    </div>
 
-            <div class="planet-status-grid" id="planet-grid"></div>
-
-            <div class="export-section">
-                <button class="btn-primary" style="background-color: #0284c7;" onclick="exportFullChartHTML()">
-                    📥 دانلود گزارش کامل چارت (HTML)
-                </button>
-                <button onclick="clearAllData()" style="margin-top: 8px; background: #ef4444; color: white; border:none; padding:8px; cursor:pointer; font-size:0.8rem; border-radius: 8px; width: 100%;">
-                    ⚠️ پاک‌سازی کل اطلاعات چارت
-                </button>
+    <!-- تب ۳: عناصر، کیفیتها و نیمکرهها -->
+    <div id="tab-temperament" class="tab-content">
+        <div class="card">
+            <h3>گام ۱ و ۲: امتیاز عناصر، کیفیتهای سهگانه و نیمکرهها (جلسات ۳ و ۱۱)</h3>
+            <p style="font-size:0.85rem;">امتیاز ۴ عنصر، توزیع کیفیتها (آغازگر، ثابت، متغیر) و نیمکرهها را وارد کنید:</p>
+            
+            <h4 style="color:var(--accent-color); margin-top:10px;">امتیاز عناصر چهارگانه:</h4>
+            <div class="elements-grid">
+                <div class="element-card"><label>🔥 آتش</label><input type="number" id="score-fire" value="0" min="0"></div>
+                <div class="element-card"><label>🌍 خاک</label><input type="number" id="score-earth" value="0" min="0"></div>
+                <div class="element-card"><label>🌬️ هوا</label><input type="number" id="score-air" value="0" min="0"></div>
+                <div class="element-card"><label>💧 آب</label><input type="number" id="score-water" value="0" min="0"></div>
             </div>
+
+            <h4 style="color:var(--accent-color); margin-top:15px;">بررسی کیفیتهای سهگانه (Modes / Qualities):</h4>
+            <div class="form-row form-row-3" style="margin-bottom: 15px;">
+                <div class="element-card">
+                    <label>⚡ آغازگر (Cardinal)</label>
+                    <input type="number" id="score-cardinal" value="0" min="0">
+                    <small style="font-size:0.75rem; color:#64748b;">شروع، رهبری، پیشگامی (حمل، سرطان، میزان، جدی)</small>
+                </div>
+                <div class="element-card">
+                    <label>🛡️ ثابت (Fixed)</label>
+                    <input type="number" id="score-fixed" value="0" min="0">
+                    <small style="font-size:0.75rem; color:#64748b;">ثبات، استمرار، پشتکار (ثور، اسد، عقرب، دلو)</small>
+                </div>
+                <div class="element-card">
+                    <label>🌊 متغیر (Mutable)</label>
+                    <input type="number" id="score-mutable" value="0" min="0">
+                    <small style="font-size:0.75rem; color:#64748b;">انعطاف، سازگاری، تطبیق (جوزا، سنبله، قوس، حوت)</small>
+                </div>
+            </div>
+
+            <h4 style="color:var(--accent-color); margin-top:15px;">بررسی نیمکرهها (تعداد سیارات):</h4>
+            <div class="form-row form-row-2">
+                <div class="form-group">
+                    <label>نیمکره فوقانی (خانههای ۷ تا ۱۲ - دیدهشدن اجتماعی):</label>
+                    <input type="number" id="hemi-upper" value="0" min="0" max="12">
+                </div>
+                <div class="form-group">
+                    <label>نیمکره تحتانی (خانههای ۱ تا ۶ - دروننگری و خلوت):</label>
+                    <input type="number" id="hemi-lower" value="0" min="0" max="12">
+                </div>
+                <div class="form-group">
+                    <label>نیمکره شرقی (خانههای ۱۰ تا ۳ - استقلال و خودآغازگری):</label>
+                    <input type="number" id="hemi-east" value="0" min="0" max="12">
+                </div>
+                <div class="form-group">
+                    <label>نیمکره غربی (خانههای ۴ تا ۹ - رابطهمحوری):</label>
+                    <input type="number" id="hemi-west" value="0" min="0" max="12">
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="calculateHemispheresAndTemperament()">محاسبه و تحلیل عناصر، کیفیتها و مزاج</button>
+
+            <div id="temperament-result" style="display:none; margin-top:20px;">
+                <div class="summary-box">
+                    <div><strong>گرمی (آتش + هوا):</strong> <span id="res-hot">0</span></div>
+                    <div><strong>سردی (خاک + آب):</strong> <span id="res-cold">0</span></div>
+                    <div><strong>تری (آب + هوا):</strong> <span id="res-wet">0</span></div>
+                    <div><strong>خشکی (آتش + خاک):</strong> <span id="res-dry">0</span></div>
+                </div>
+                <div style="text-align:center; padding:12px; background:#0284c7; color:white; border-radius:8px; font-weight:bold; margin-bottom:15px;">
+                    مزاج غالب: <span id="res-final" style="color:#fef08a;">-</span> | کیفیت غالب ریتم عملکرد: <span id="res-quality-dominant" style="color:#fef08a;">-</span>
+                </div>
+                <div id="quality-analysis-box" style="background:var(--card-bg); border:1px solid var(--border-color); padding:12px; border-radius:8px; font-size:0.9rem; margin-bottom:15px; line-height:1.7;"></div>
+                <div id="hemi-analysis-text" style="background:var(--border-color); padding:12px; border-radius:8px; font-size:0.9rem; line-height:1.7;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تب ۴: سامانه کامل مزاجشناسی -->
+    <div id="tab-full-mezag" class="tab-content">
+        <div class="card">
+            <h3>سامانه تخصصی محاسبه و تحلیل مزاج بر اساس عناصر آسترولوژی</h3>
+            <p style="font-size:0.85rem; color:#64748b;">امتیازات عناصر چارت خود را وارد کنید تا جدول کامل مزاج (صفراوی، سوداوی، دموی، بلغمی) به همراه ویژگیهای بدنی و روانی نمایش داده شود:</p>
+
+            <div class="elements-grid" style="margin-bottom: 20px;">
+                <div class="element-card"><label>🔥 آتش</label><input type="number" id="mezag-fire" value="0" min="0"></div>
+                <div class="element-card"><label>🌍 خاک</label><input type="number" id="mezag-earth" value="0" min="0"></div>
+                <div class="element-card"><label>🌬️ هوا</label><input type="number" id="mezag-air" value="0" min="0"></div>
+                <div class="element-card"><label>💧 آب</label><input type="number" id="mezag-water" value="0" min="0"></div>
+            </div>
+
+            <button class="btn-primary" onclick="calculateFullMezag()">محاسبه کامل مزاج و نمایش جدول مرجع</button>
+
+            <div id="full-mezag-result" style="display:none; margin-top:20px;">
+                <div class="summary-box">
+                    <div><strong>گرمی (آتش + هوا):</strong> <span id="m-hot">0</span></div>
+                    <div><strong>سردی (خاک + آب):</strong> <span id="m-cold">0</span></div>
+                    <div><strong>تری (آب + هوا):</strong> <span id="m-wet">0</span></div>
+                    <div><strong>خشکی (آتش + خاک):</strong> <span id="m-dry">0</span></div>
+                </div>
+
+                <div style="text-align: center; padding: 12px; background: #0284c7; color: white; border-radius: 8px; font-size: 1.05rem; margin-bottom: 20px;">
+                    مزاج تشخیصی نهایی: <strong id="m-final" style="color: #fef08a;">-</strong>
+                </div>
+
+                <h4>جدول مشخصات مزاج (مرجع آسترولوژی):</h4>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>مزاج</th>
+                                <th>ترکیب کیفیتها</th>
+                                <th>نام در مزاجشناسی</th>
+                                <th>عنصر</th>
+                                <th>نمود بدنی</th>
+                                <th>ویژگی کلی</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fullTemperamentTableBody">
+                            <!-- پر شده با جاوااسکریپت -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تب ۵: گزارش پرونده نفس -->
+    <div id="tab-report" class="tab-content">
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>📄 گزارش کامل پرونده نفس (منطبق بر جزوه جلسه ۱۱)</h3>
+                <button onclick="window.print()" style="width:auto; background:#10b981;" class="btn-primary">🖨️ چاپ / خروجی PDF</button>
+            </div>
+
+            <div id="report-client-info" style="margin:15px 0; padding:12px; background:var(--border-color); border-radius:6px;"></div>
+            
+            <h4>۱ و ۲. نیمکرهها، عناصر، کیفیتهای سهگانه و مزاج غالب</h4>
+            <div id="report-element-hemi" style="margin-bottom:15px; font-size:0.9rem; line-height:1.7;">ثبتنشده</div>
+
+            <h4>۳. الگوهای کلان و استلیوم</h4>
+            <div id="report-stellium-info" style="margin-bottom:15px; font-size:0.9rem;">بررسی نشده</div>
+
+            <h4>۴. سنتز سهگانه (خورشید، ماه و طالع - AC)</h4>
+            <div id="report-synthesis" style="margin-bottom:15px; font-size:0.9rem; line-height:1.7;">ثبتنشده</div>
+
+            <h4>۵. جاگذاری کواکب و نقاط در برجها و خانهها</h4>
+            <div id="report-planets-list" style="margin-bottom:15px;">سیارهای ثبت نشده است.</div>
+
+            <h4>۶. جنبههای ثبتشده به همراه تحلیل تفصیلی (Aspects)</h4>
+            <div id="report-aspects-list" style="margin-bottom:15px;">جنبهای ثبت نشده است.</div>
+
+            <h4>۷. رسالت فردی و مسیر شغلی (MC و سیاره حاکم)</h4>
+            <div id="report-mc-info" style="font-size:0.9rem; color:#475569; line-height:1.7;">بر اساس محل قرارگیری MC در چارت و سیاره حاکم آن تحلیل میشود.</div>
         </div>
     </div>
 </div>
 
 <script>
 const db = {
-  "planets": [
-    {"name_fa": "خورشید", "symbol": "☉", "core_function": "هویت، اراده، هدف زندگی و «منِ آگاه»", "core_question": "من چه کسی هستم؟ چه چیزی به زندگی من معنا می‌دهد؟", "basic_needs": ["دیده شدن", "تأیید شدن", "خلاقیت"], "shadow": "افراط: غرور، خودمحوری ↔ تفریط: ضعف اعتمادبه‌نفس، بی‌هدفی"},
-    {"name_fa": "ماه", "symbol": "☽", "core_function": "احساسات، غرایز، نیازهای عاطفی و پناهگاه روان", "core_question": "چه چیزی به من احساس امنیت می‌دهد؟", "basic_needs": ["احساس امنیت روانی", "تعلق به خانه/خانواده", "حمایت عاطفی"], "shadow": "افراط: دمدمی‌مزاجی، وابستگی ناسالم ↔ تفریط: سرکوب احساسات، سردی"},
-    {"name_fa": "عطارد", "symbol": "☿", "core_function": "ذهن منطقی، یادگیری، تحلیل اطلاعات و ارتباطات", "core_question": "من چگونه فکر می‌کنم و افکارم را با دیگران در میان می‌گذارم؟", "basic_needs": ["یادگیری مداوم", "گفتگو و ارتباط", "تبادل اطلاعات"], "shadow": "آشفتگی ذهنی، پرحرفی بدون محتوا، عدم تمرکز، استفاده از منطق برای فریب"},
-    {"name_fa": "زهره", "symbol": "♀️", "core_function": "عشق، زیبایی، ارزش‌های شخصی، جذب مادی و عاطفی", "core_question": "چه چیزی برای من زیباست؟ از چه چیزهایی لذت می‌برم؟", "basic_needs": ["ارتباط عاطفی سالم", "صمیمیت و عشق", "درک زیبایی و هنر"], "shadow": "تنبلی، زیاده‌خواهی مادی یا عاطفی، وابستگی عاطفی افراطی، سطحی‌نگری"},
-    {"name_fa": "مریخ", "symbol": "♂️", "core_function": "موتور حرکت، انرژی حیاتی، انگیزه، شجاعت و اقدام", "core_question": "چه چیزی مرا به حرکت وامی‌دارد؟ چگونه رقابت می‌کنم؟", "basic_needs": ["تحرک فیزیکی", "اقدام سریع", "ابراز اراده شخصی"], "shadow": "پرخاشگری و تندخویی، عصبانیت آنی، رقابت ناسالم، اقدام عجولانه"},
-    {"name_fa": "مشتری", "symbol": "♃", "core_function": "توسعه، رشد، گسترش آگاهی، خوش‌بینی و ایمان", "core_question": "از چه مسیری بیشترین رشد را تجربه می‌کنم؟", "basic_needs": ["کشف افق‌های تازه", "سفر به فرهنگ‌های دیگر", "یادگیری علوم فلسفی"], "shadow": "خوش‌بینی ساده‌لوحانه، ولخرجی، تنبلی و اتکا به شانس، تعصب فکری"},
-    {"name_fa": "زحل", "symbol": "♄", "core_function": "نماد ساختار، نظم، انضباط، مسئولیت و بلوغ", "core_question": "در کدام بخش باید بیشترین تلاش و صبوری را داشته باشم؟", "basic_needs": ["نظم فردی و دیسیپلین", "پذیرش تعهدات", "برنامه‌ریزی بلندمدت"], "shadow": "بدبینی، ترس شدید از شکست، سخت‌گیری افراطی، انعطاف‌ناپذیری، افسردگی"},
-    {"name_fa": "اورانوس", "symbol": "♅", "core_function": "نماد آزادی، نوآوری، بیداری ناگهانی و استقلال", "core_question": "در کدام بخش باید راه متفاوت و منحصر‌به‌فرد خود را بسازم؟", "basic_needs": ["استقلال همه‌جانبه", "تجربه‌های نوین و تکنولوژیک", "شکستن قالب‌ها"], "shadow": "بی‌صبری شدید، طغیان صرفاً برای لجبازی، بی‌مسئولیتی، قطع ناگهانی روابط"},
-    {"name_fa": "نپتون", "symbol": "♆", "core_function": "الهام، شهود، معنویت، تخیل خلاق و یگانگی عمیق", "core_question": "چگونه می‌توانم از مرزهای محدود منیت خود فراتر بروم؟", "basic_needs": ["تجربه یگانگی عاطفی", "ارتباط با هنر و موسیقی", "ابراز شفقت بی‌دریغ"], "shadow": "فرار از واقعیت، خودفریبی، احساس قربانی‌بودن، پناه بردن به توهم"},
-    {"name_fa": "پلوتو", "symbol": "♇", "core_function": "تحول بنیادین، قدرت پنهان، مرگ و تولد دوباره", "core_question": "در کدام بخش باید با عمیق‌ترین ترس‌های روانی مواجه شوم؟", "basic_needs": ["تحول همه‌جانبه روحی", "رهایی از وابستگی مسموم", "بازیابی قدرت شخصی"], "shadow": "کنترل‌گری شدید، کینه‌توزی، وسواس‌های عاطفی، میل افراطی به قدرت"}
+  planets: [
+    { name_fa: "خورشید", symbol: "☉", core: "هویت، اراده و منِ آگاه", question: "من چه کسی هستم؟", needs: ["دیدهشدن", "تأیید", "خلاقیت"], shadow: "غرور و خودمحوری ↔ ضعف اعتمادبهنفس" },
+    { name_fa: "ماه", symbol: "☽", core: "احساسات، غرایز و امنیت روانی", question: "چه چیزی به من احساس امنیت میدهد؟", needs: ["امنیت روانی", "تعلق به خانواده", "حمایت عاطفی"], shadow: "دمدمیمزاجی ↔ سرکوب احساسات" },
+    { name_fa: "عطارد", symbol: "☿", core: "ذهن منطقی، یادگیری و ارتباطات", question: "من چگونه فکر و ارتباط برقرار میکنم؟", needs: ["یادگیری", "گفتگو", "تبادل اطلاعات"], shadow: "آشفتگی ذهنی، پرحرفی بیپایه" },
+    { name_fa: "زهره", symbol: "♀️", core: "عشق، ارزشها و جذب زیبایی", question: "چه چیزی برای من زیبا و باارزش است؟", needs: ["ارتباط عاطفی", "صمیمیت", "درک هنر"], shadow: "تنبلی، وابستگی ناسالم" },
+    { name_fa: "مریخ", symbol: "♂️", core: "موتور حرکت، اقدام و شجاعت", question: "چه چیزی مرا به حرکت وامیدارد؟", needs: ["تحرک فیزیکی", "اقدام سریع", "ابراز اراده"], shadow: "پرخاشگری و عصبانیت آنی" },
+    { name_fa: "مشتری", symbol: "♃", core: "توسعه، خوشبینی و رشد آگاهی", question: "از چه مسیری بیشترین رشد را دارم؟", needs: ["کشف افقهای تازه", "یادگیری فلسفه"], shadow: "خوشبینی سادهلوحانه، ولخرجی" },
+    { name_fa: "زحل", symbol: "♄", core: "نظم، ساختار، مسئولیت و بلوغ", question: "در کجا باید صبور و منضبط باشم؟", needs: ["نظم و دیسیپلین", "برنامهریزی بلندمدت"], shadow: "بدبینی، ترس از شکست، سختگیری" },
+    { name_fa: "اورانوس", symbol: "♅", core: "آزادی، استقلال و نوآوری", question: "در کجا باید راه منحصربهفرد بسازم؟", needs: ["استقلال", "تجربههای نوین"], shadow: "بیصبری شدید، طغیان بیهدف" },
+    { name_fa: "نپتون", symbol: "♆", core: "شهود، معنویت و تخیل خلاق", question: "چگونه از مرزهای منیت فراتر بروم؟", needs: ["ارتباط با هنر", "شفقت بیدریغ"], shadow: "فرار از واقعیت، خودفریبی" },
+    { name_fa: "پلوتو", symbol: "♇", core: "تحول بنیادین و قدرت پنهان روان", question: "در کجا با عمیقترین ترسها مواجه شوم؟", needs: ["تحول روحی", "بازیابی قدرت"], shadow: "کنترلگری شدید، کینهتوزی" },
+    { name_fa: "طالع (Ascendant / AC)", symbol: "AC", core: "ویترین شخصیت، نحوه ورود به جهان", question: "دیگران در نگاه اول مرا چگونه میبینند؟", needs: ["ابراز خود واقعی", "تأثیرگذاری اولیه"], shadow: "نقاب زدن مصنوعی" },
+    { name_fa: "سقف آسمان (Midheaven / MC)", symbol: "MC", core: "پرستیژ اجتماعی، جایگاه حرفهای و اهداف بلند", question: "مهمترین دستاورد من در جامعه چیست؟", needs: ["دستیابی به موفقیت حرفهای"], shadow: "جاهطلبی کورکورانه" }
   ],
-  "zodiac_signs": [
-    {"name_fa": "حمل", "emoji": "♈", "element": "آتش", "temperament": "گرم و خشک (صفراوی)", "strategy": "مواجهه مستقیم، پیشگامی عینی، جسارت در اقدام", "keywords": ["آغاز", "جسارت", "استقلال"], "shadow": "پرخاشگری، خودمحوری، رها کردن عجولانه پروژه‌ها"},
-    {"name_fa": "ثور", "emoji": "♉", "element": "خاک", "temperament": "سرد و خشک (سوداوی)", "strategy": "پشتکار، استمرار طولانی‌مدت، صبر بی‌نظیر", "keywords": ["ثبات", "صبر", "لذت‌های حسی"], "shadow": "لجاجت سرسختانه، مادی‌گرایی افراطی، رکود و ترس از تغییر"},
-    {"name_fa": "جوزا", "emoji": "♊", "element": "هوا", "temperament": "گرم و تر (دموی)", "strategy": "گردآوری اطلاعات، برقراری سریع ارتباط کلامی", "keywords": ["کنجکاوی", "ارتباط", "انعطاف ذهنی"], "shadow": "پراکندگی شدید ذهنی، سطحی‌نگری، شایعه‌پراکنی"},
-    {"name_fa": "سرطان", "emoji": "♋", "element": "آب", "temperament": "سرد و تر (بلغمی)", "strategy": "همدلی شدید عاطفی، ساخت پناهگاه مستحکم", "keywords": ["احساس", "خانه", "مراقبت"], "shadow": "وابستگی ناسالم، چسبیدن به گذشته، ترس از طردشدگی"},
-    {"name_fa": "اسد", "emoji": "♌", "element": "آتش", "temperament": "گرم و خشک (صفراوی)", "strategy": "نمایش درخشان استعدادها، ابراز وجود پرشور", "keywords": ["خلاقیت", "اعتمادبه‌نفس", "نمایش"], "shadow": "غرور افراطی، نیاز وسواسی به توجه، ریاست‌طلبی"},
-    {"name_fa": "سنبله", "emoji": "♍", "element": "خاک", "temperament": "سرد و خشک (سوداوی)", "strategy": "دقت بالا به جزئیات، تمییز امور، برنامه‌ریزی دقیق", "keywords": ["دقت", "خدمت", "بهبود"], "shadow": "وسواس فکری، عیب‌جویی و انتقاد گزنده، احساس بی‌کفایتی"},
-    {"name_fa": "میزان", "emoji": "♎", "element": "هوا", "temperament": "گرم و تر (دموی)", "strategy": "ایجاد هماهنگی و صلح، دیپلماسی اجتماعی بالا", "keywords": ["هماهنگی", "عدالت", "مشارکت"], "shadow": "وابستگی به تأیید دیگران، دودلی و بلاتکلیفی مزمن"},
-    {"name_fa": "عقرب", "emoji": "♏", "element": "آب", "temperament": "سرد و تر (بلغمی)", "strategy": "درک اعماق پنهان روان، تجربه پرشور احساسات", "keywords": ["عمق", "قدرت", "دگرگونی"], "shadow": "کنترل‌گری شدید، پارانویا و شک دائم، کینه‌توزی"},
-    {"name_fa": "قوس", "emoji": "♐", "element": "آتش", "temperament": "گرم و خشک (صفراوی)", "strategy": "ماجراجویی عینی و ذهنی، سفرهای دور، ایمان ژرف", "keywords": ["جستجو", "ایمان", "ماجراجویی"], "shadow": "تعصب شدید در باورها، بی‌مسئولیتی، وعده‌های توخالی"},
-    {"name_fa": "جدی", "emoji": "♑", "element": "خاک", "temperament": "سرد و خشک (سوداوی)", "strategy": "انضباط آهنین، برنامه‌ریزی استراتژیک، صبوری", "keywords": ["انضباط", "بلوغ", "موفقیت"], "shadow": "سردی گزنده عاطفی، اعتیاد به کار، ترس از ابراز نیاز"},
-    {"name_fa": "دلو", "emoji": "♒", "element": "هوا", "temperament": "گرم و تر (دموی)", "strategy": "آزمایشگری فکری، مشارکت در گروه‌ها، طغیان هدفمند", "keywords": ["نوآوری", "گروه", "آزادی"], "shadow": "طغیان بی‌هدف، سردی عاطفی در روابط، انزوای نخبه‌گرایانه"},
-    {"name_fa": "حوت", "emoji": "♓", "element": "آب", "temperament": "سرد و تر (بلغمی)", "strategy": "عرفان ناب، خلاقیت ماورایی، تسلیم به جریان کل", "keywords": ["رؤیا", "فداکاری", "یگانگی"], "shadow": "فرار از واقعیت، توهم، احساس قربانی‌شدگی مزمن"}
+  signs: [
+    { name_fa: "حمل", emoji: "♈", element: "آتش", temp: "گرم و خشک (صفراوی)", keywords: ["آغاز", "جسارت", "پیشگامی"] },
+    { name_fa: "ثور", emoji: "♉", element: "خاک", temp: "سرد و خشک (سوداوی)", keywords: ["ثبات", "صبر", "استمرار"] },
+    { name_fa: "جوزا", emoji: "♊", element: "هوا", temp: "گرم و تر (دموی)", keywords: ["ارتباط", "کنجکاوی", "انعطاف"] },
+    { name_fa: "سرطان", emoji: "♋", element: "آب", temp: "سرد و تر (بلغمی)", keywords: ["احساس", "خانه", "مراقبت"] },
+    { name_fa: "اسد", emoji: "♌", element: "آتش", temp: "گرم و خشک (صفراوی)", keywords: ["خلاقیت", "نمایش", "اعتمادبهنفس"] },
+    { name_fa: "سنبله", emoji: "♍", element: "خاک", temp: "سرد و خشک (سوداوی)", keywords: ["دقت", "خدمت", "برنامهریزی"] },
+    { name_fa: "میزان", emoji: "♎", element: "هوا", temp: "گرم و تر (دموی)", keywords: ["تعادل", "عدالت", "دیپلماسی"] },
+    { name_fa: "عقرب", emoji: "♏", element: "آب", temp: "سرد و تر (بلغمی)", keywords: ["عمق", "تحول", "قدرت"] },
+    { name_fa: "قوس", emoji: "♐", element: "آتش", temp: "گرم و خشک (صفراوی)", keywords: ["ماجراجویی", "ایمان", "توسعه"] },
+    { name_fa: "جدی", emoji: "♑", element: "خاک", temp: "سرد و خشک (سوداوی)", keywords: ["انضباط", "مسئولیت", "بلوغ"] },
+    { name_fa: "دلو", emoji: "♒", element: "هوا", temp: "گرم و تر (دموی)", keywords: ["نوآوری", "استقلال", "گروه"] },
+    { name_fa: "حوت", emoji: "♓", element: "آب", temp: "سرد و تر (بلغمی)", keywords: ["شهود", "رؤیا", "یگانگی"] }
   ],
-  "houses": [
-    {"number": 1, "title": "عرصه منِ خودآگاه (من حقیقی)", "key_code": "شخصیت، ظاهر، من", "natural_element": "آتش", "temperament": "گرم و خشک (انرژی حیاتی اولیه)"},
-    {"number": 2, "title": "عرصه دارایی‌ها و ارزش‌ها", "key_code": "دارایی، ارزش‌ها، عزت‌نفس", "natural_element": "خاک", "temperament": "سرد و خشک (ثبات و ماده)"},
-    {"number": 3, "title": "عرصه ارتباطات و یادگیری", "key_code": "ارتباطات، یادگیری، برادر/خواهر", "natural_element": "هوا", "temperament": "گرم و تر (تبادل و تحرک)"},
-    {"number": 4, "title": "عرصه ریشه‌ها و خانواده", "key_code": "خانواده، ریشه‌ها، خانه", "natural_element": "آب", "temperament": "سرد و تر (عاطفه و امنیت پنهان)"},
-    {"number": 5, "title": "عرصه خلاقیت و عشق", "key_code": "خلاقیت، عشق، تفریح", "natural_element": "آتش", "temperament": "گرم و خشک (ابراز وجود و اشتیاق)"},
-    {"number": 6, "title": "عرصه نظم و کار روزمره", "key_code": "کار، خدمت، سلامت", "natural_element": "خاک", "temperament": "سرد و خشک (برنامه‌ریزی و سنجش)"},
-    {"number": 7, "title": "عرصه روابط و مشارکت", "key_code": "روابط، شراکت، ازدواج", "natural_element": "هوا", "temperament": "گرم و تر (تعامل و دیپلماسی)"},
-    {"number": 8, "title": "عرصه تحول و منابع مشترک", "key_code": "تحول، میراث، منابع مشترک", "natural_element": "آب", "temperament": "سرد و تر (عمق روانی و جذب)"},
-    {"number": 9, "title": "عرصه باورها و سفرهای دور", "key_code": "سفر، فلسفه، آموزش عالی", "natural_element": "آتش", "temperament": "گرم و خشک (توسعه و معنویت پویا)"},
-    {"number": 10, "title": "عرصه جایگاه و شغل", "key_code": "حرفه، جایگاه، شهرت", "natural_element": "خاک", "temperament": "سرد و خشک (ساختار و اهداف)"},
-    {"number": 11, "title": "عرصه دوستان و آرمان‌ها", "key_code": "دوستان، گروه‌ها، آرمان‌ها", "natural_element": "هوا", "temperament": "گرم و تر (ایده‌های گروهی)"},
-    {"number": 12, "title": "عرصه ناخودآگاه و معنویت", "key_code": "ناخودآگاه، تنهایی، عرفان", "natural_element": "آب", "temperament": "سرد و تر (رهاسازی و شهود)"}
+  houses: [
+    { number: 1, title: "عرصه منِ خودآگاه و تن" },
+    { number: 2, title: "عرصه داراییها و ارزشها" },
+    { number: 3, title: "عرصه ارتباطات و یادگیری" },
+    { number: 4, title: "عرصه ریشهها و خانواده" },
+    { number: 5, title: "عرصه خلاقیت و عشق" },
+    { number: 6, title: "عرصه نظم، کار و سلامت" },
+    { number: 7, title: "عرصه روابط و مشارکت" },
+    { number: 8, title: "عرصه تحول و منابع مشترک" },
+    { number: 9, title: "عرصه باورها و سفرهای دور" },
+    { number: 10, title: "عرصه جایگاه و حرفه" },
+    { number: 11, title: "عرصه دوستان و آرمانها" },
+    { number: 12, title: "عرصه ناخودآگاه و معنویت" }
   ],
-  "aspects": [
-    {"name_fa": "اقتران", "symbol": "☌", "angle": "۰ درجه", "keywords": "ادغام + تمرکز + فوران انرژی", "concept": "تمرکز شدید و ادغام دو انرژی که یک ابرسیاره ترکیبی می‌سازد."},
-    {"name_fa": "تسدیس", "symbol": "⚹", "angle": "۶۰ درجه", "keywords": "فرصت + همکاری + نیاز به تلاش", "concept": "فرصت‌های هماهنگ که نیازمند کمی اقدام آگاهانه فرد است."},
-    {"name_fa": "تربیع", "symbol": "□", "angle": "۹۰ درجه", "keywords": "اصطکاک + فشار مداوم + بحران محرک", "concept": "اصطکاک و تنش شدید که مثل موتور محرک رشد عمل می‌کند."},
-    {"name_fa": "تثلیث", "symbol": "△", "angle": "۱۲۰ درجه", "keywords": "استعداد ذاتی + جریان طبیعی", "concept": "جریان کاملاً روان و استعداد طبیعی که نیازمند مراقبت از تنبلی است."},
-    {"name_fa": "تقابل", "symbol": "☍", "angle": "۱۸۰ درجه", "keywords": "رویارویی + تنش + نیاز به تعادل", "concept": "کش‌مکش مستقیم بین دو قطب متضاد و نیاز مبرم به برقراری تعادل."},
-    {"name_fa": "استلیوم (تجمع کواکب)", "symbol": "☸", "angle": "الگو", "keywords": "تمرکز شدید انرژی + غلبه یک تم خاص", "concept": "حضور ۳ یا چند سیاره در یک خانه یا برج که تمرکز روانی و فوق‌العاده‌ای در آن بخش ایجاد می‌کند."},
-    {"name_fa": "تی-اسکوئر (T-Square)", "symbol": "⟁", "angle": "الگو", "keywords": "تنش پویا + انگیزه موفقیت بزرگ", "concept": "الگوی چالش‌برانگیز شامل دو تقابل و یک تربیع دوطرفه که فرد را مجبور به رشد سریع می‌کند."},
-    {"name_fa": "تثلیث بزرگ(Grand Trine)", "symbol": "⌬", "angle": "الگو", "keywords": "استعداد بی‌نظیر + شانس ذاتی", "concept": "ارتباط روان بین سه سیاره در یک عنصر که جریان موهبت و استعدادهای ذاتی را بسیار قوی می‌کند."},
-    {"name_fa": "یود (Yod - انگشت خدا)", "symbol": "☝", "angle": "الگو", "keywords": "سرنوشت + تنظیم مجدد مسیر", "concept": "الگویی شامل دو شبه‌تسدیس و یک تنافر که نشان‌دهنده یک هدف مشخص سرنوشت‌ساز در زندگی است."}
-  ]
+  aspects: [
+    { name: "اقتران (Conjunction)", symbol: "☌", angle: "۰°", nature: "ادغام شدید دو انرژی و تمرکز بالا (اورب مجاز: ۸ تا ۱۰ درجه برای خورشید/ماه)", interpretation: "در این جنبه، انرژی دو سیاره به طور کامل با یکدیگر ترکیب و متمرکز میشود. این ترکیب مانند یک 'ابرسیاره' عمل کرده که میتواند نیرویی فوقالعاده یا تمرکزی شدید در آن حوزه ایجاد کند، اما نیازمند مدیریت دقیق است تا به افراط کشیده نشود." },
+    { name: "تسدیس (Sextile)", symbol: "⚹", angle: "۶۰°", nature: "فرصتهای هماهنگ و نیازمند اقدام آگاهانه (اورب: ۸ درجه)", interpretation: "جنبهای سازنده و فرصتساز است. انرژی دو سیاره با یکدیگر همکاری خوبی دارند، اما برای شکوفایی این فرصتها، وجود تلاش و اقدام آگاهانه از سوی فرد ضروری است." },
+    { name: "تربیع (Square)", symbol: "□", angle: "۹۰°", nature: "اصطکاک، چالش و موتور محرک رشد (اورب: ۸ درجه)", interpretation: "نشاندهنده اصطکاک، فشار و تنش فعال بین دو نیروست. این جنبه مانند یک موتور محرک و چالشبرانگیز عمل میکند که فرد را از منطقه امن خارج کرده و ناچار به تلاش، پختگی و حل مسئله مینماید." },
+    { name: "تثلیث (Trine)", symbol: "△", angle: "۱۲۰°", nature: "جریان روان، استعداد ذاتی و موهبت (اورب: ۸ درجه)", interpretation: "جریان کاملاً روان، هماهنگ و طبیعی انرژیهاست که نماد استعدادهای ذاتی، توانمندیهای بالقوه و موهبتهای فردی محسوب میشود؛ البته خطر راحتطلبی و عدم تلاش کافی در آن وجود دارد." },
+    { name: "تقابل (Opposition)", symbol: "☍", angle: "۱۸۰°", nature: "تنش مستقیم دو قطب و نیاز به تعادل (اورب: ۸ تا ۱۰ درجه)", interpretation: "نشاندهنده رویارویی مستقیم دو نیروی متضاد در دو قطب مخالف است. این جنبه ایجاد کشمکش میکند اما در عین حال، فرد را وادار میسازد تا آگاهانه میان دو نیاز متضاد تعادل برقرار کرده و به رشد همهجانبه برسد." }
+  ],
+  dignities: {
+    "خورشید": { ruling: "اسد", exaltation: "حمل", detriment: "دلو", fall: "میزان" },
+    "ماه": { ruling: "سرطان", exaltation: "ثور", detriment: "جدی", fall: "عقرب" },
+    "عطارد": { ruling: "جوزا", exaltation: "سنبله", detriment: "قوس", fall: "حوت" },
+    "زهره": { ruling: "ثور", exaltation: "حوت", detriment: "عقرب", fall: "سنبله" },
+    "مریخ": { ruling: "حمل", exaltation: "جدی", detriment: "میزان", fall: "سرطان" },
+    "مشتری": { ruling: "قوس", exaltation: "سرطان", detriment: "جوزا", fall: "جدی" },
+    "زحل": { ruling: "جدی", exaltation: "میزان", detriment: "سرطان", fall: "حمل" }
+  }
 };
 
-let userChart = {}; // بر اساس نام سیارات ذخیره می‌شود
+let userChart = {};
+let userAspects = [];
 let clientInfo = {};
+let temperamentData = {};
 
 function init() {
-    const planetSel = document.getElementById('select-planet');
+    const pSel = document.getElementById('select-planet');
+    const ap1 = document.getElementById('aspect-p1');
+    const ap2 = document.getElementById('aspect-p2');
+
+    pSel.innerHTML = '';
+    ap1.innerHTML = '';
+    ap2.innerHTML = '';
+
     db.planets.forEach(p => {
-        planetSel.innerHTML += `<option value="${p.name_fa}">${p.symbol} ${p.name_fa}</option>`;
+        const opt = `<option value="${p.name_fa}">${p.symbol} ${p.name_fa}</option>`;
+        pSel.innerHTML += opt;
+        ap1.innerHTML += opt;
+        ap2.innerHTML += opt;
     });
 
-    const signSel = document.getElementById('select-sign');
-    db.zodiac_signs.forEach(s => {
-        signSel.innerHTML += `<option value="${s.name_fa}">${s.emoji} ${s.name_fa} (${s.element})</option>`;
+    const sSel = document.getElementById('select-sign');
+    sSel.innerHTML = '';
+    db.signs.forEach(s => {
+        sSel.innerHTML += `<option value="${s.name_fa}">${s.emoji} ${s.name_fa} (${s.element})</option>`;
     });
 
-    const houseSel = document.getElementById('select-house');
+    const hSel = document.getElementById('select-house');
+    hSel.innerHTML = '';
     db.houses.forEach(h => {
-        houseSel.innerHTML += `<option value="${h.number}">خانه ${h.number}: ${h.key_code}</option>`;
+        hSel.innerHTML += `<option value="${h.number}">خانه ${h.number}: ${h.title}</option>`;
     });
 
-    const aspectSel = document.getElementById('select-aspect');
+    const aspSel = document.getElementById('aspect-type');
+    aspSel.innerHTML = '';
     db.aspects.forEach(a => {
-        aspectSel.innerHTML += `<option value="${a.name_fa}">${a.symbol} ${a.name_fa} (${a.angle}) - ${a.keywords}</option>`;
+        aspSel.innerHTML += `<option value="${a.name}">${a.symbol} ${a.name} (${a.angle})</option>`;
     });
 
-    loadFromLocalStorage();
-    renderPlanetGrid();
     startClock();
+    renderPlanetGrid();
+    checkPlanetDignity();
 }
 
 function startClock() {
     setInterval(() => {
         const now = new Date();
-        document.getElementById('live-datetime').innerText = now.toLocaleDateString('fa-IR') + ' - ' + now.toLocaleTimeString('fa-IR');
+        document.getElementById('clock').innerText = now.toLocaleDateString('fa-IR') + ' - ' + now.toLocaleTimeString('fa-IR');
     }, 1000);
 }
 
-function saveClientInfo() {
-    clientInfo = {
-        name: document.getElementById('client-name').value,
-        dob: document.getElementById('client-dob').value,
-        tob: document.getElementById('client-tob').value
-    };
-    localStorage.setItem('userOfflineAstrologyClient_v2', JSON.stringify(clientInfo));
+function toggleTheme() {
+    const body = document.body;
+    body.getAttribute('data-theme') === 'dark' ? body.removeAttribute('data-theme') : body.setAttribute('data-theme', 'dark');
 }
 
-function generateAnalysis() {
-    const planet = db.planets.find(p => p.name_fa === document.getElementById('select-planet').value);
-    const sign = db.zodiac_signs.find(s => s.name_fa === document.getElementById('select-sign').value);
-    const house = db.houses.find(h => h.number == document.getElementById('select-house').value);
-    const aspectName = document.getElementById('select-aspect').value;
-    const aspect = db.aspects.find(a => a.name_fa === aspectName);
+function switchTab(tabId, evt) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    if (evt && evt.target) {
+        evt.target.classList.add('active');
+    }
+    document.getElementById(tabId).classList.add('active');
 
-    let htmlStep = `
-        <div class="step-item"><strong>۱. سیاره (${planet.symbol} ${planet.name_fa}):</strong> نیاز به ${planet.basic_needs.join('، ')}</div>
-        <div class="step-item"><strong>۲. برج (${sign.emoji} ${sign.name_fa}):</strong> سبکِ ${sign.keywords.join('، ')}</div>
-        <div class="step-item"><strong>۳. خانه (${house.number}):</strong> عرصهٔ ${house.key_code}</div>
-        <div class="step-item" style="background:#f0fdf4; border-color:#bbf7d0; color:#166534;">
-            <strong>🌿 تحلیل مزاجی:</strong> مزاج برج (${sign.name_fa}): <b>${sign.temperament}</b> | مزاج بستر خانه ${house.number}: <b>${house.temperament}</b>
-        </div>
-    `;
+    if (tabId === 'tab-report') {
+        updateReportView();
+    }
+}
 
-    if (aspect) {
-        htmlStep += `<div class="step-item"><strong>۴. جنبه/الگو (${aspect.name_fa}):</strong> ${aspect.keywords}</div>`;
+function checkPlanetDignity() {
+    const pName = document.getElementById('select-planet').value;
+    const signName = document.getElementById('select-sign').value;
+    const out = document.getElementById('dignity-output');
+    const combustionBox = document.getElementById('combustion-box');
+    
+    let html = "";
+    const dig = db.dignities[pName];
+    if (dig) {
+        if (dig.ruling === signName) {
+            html += `<span class="dignity-badge dignity-ruling">👑 حاکمیت (Ruling): انرژی قوی و اصیل</span>`;
+        } else if (dig.exaltation === signName) {
+            html += `<span class="dignity-badge dignity-exaltation">⭐ شرف (Exaltation): شکوفایی و کیفیت عالی</span>`;
+        } else if (dig.detriment === signName) {
+            html += `<span class="dignity-badge dignity-detriment">⚠️ تبعید (Detriment): چالش در ابراز آسان انرژی</span>`;
+        } else if (dig.fall === signName) {
+            html += `<span class="dignity-badge dignity-fall">⬇️ سقوط (Fall): نقطه ضعف یا چالش ساختاری</span>`;
+        }
     }
 
-    document.getElementById('step-by-step').innerHTML = htmlStep;
-
-    let textTemplate = `«من نیاز به ${planet.basic_needs[0]} (سیاره ${planet.name_fa}) را، به سبکِ ${sign.keywords.join(' و ')} (برج ${sign.name_fa})، در عرصه‌ی ${house.key_code} (خانه ${house.number}) ایفا می‌کنم.»\n\n`;
-    textTemplate += `تعبیر روان:\nشما در حوزه ${house.key_code}، انگیزه دارید تا با استراتژی ${sign.strategy} پیش بروید. سوال بنیادی این سیاره برای شما: «${planet.core_question}»\n\n`;
-    textTemplate += `🌿 بستر مزاجی و تعادل انرژی:\nمزاج برج ${sign.name_fa} (${sign.temperament}) با بستر خانه ${house.number} (${house.temperament}) در هم می‌آمیزد.\n\n`;
-    textTemplate += `⚠️ چالش‌ها و سایه روانی:\nچالش اصلی سیاره: ${planet.shadow}\nسایه برج ${sign.name_fa}: ${sign.shadow}`;
-
-    if (aspect) {
-        textTemplate += `\n\n⚛️ تاثیر جنبه یا الگوی نجومی (${aspect.name_fa}):\n${aspect.concept} (${aspect.keywords})`;
+    // کنترل نمایش باکس احتراق
+    if (pName !== "خورشید" && pName !== "طالع (Ascendant / AC)" && pName !== "سقف آسمان (Midheaven / MC)") {
+        combustionBox.style.display = 'block';
+        if (userChart["خورشید"] && userChart["خورشید"].sign === signName) {
+            html += `<span class="dignity-badge dignity-combustion">🔥 در مجاورت خورشید (احتمال احتراق)</span>`;
+        }
+    } else {
+        combustionBox.style.display = 'none';
+        document.getElementById('is-combust').checked = false;
     }
 
-    document.getElementById('final-user-text').value = textTemplate;
-    document.getElementById('analysis-preview').style.display = 'block';
+    out.innerHTML = html;
+}
+
+function onPlanetSelectChange() {
+    checkPlanetDignity();
+    loadPlanetDataIfExists();
+}
+
+function generatePlanetAnalysis() {
+    const pName = document.getElementById('select-planet').value;
+    const p = db.planets.find(x => x.name_fa === pName);
+    const s = db.signs.find(x => x.name_fa === document.getElementById('select-sign').value);
+    const h = db.houses.find(x => x.number == document.getElementById('select-house').value);
+    const isCombust = document.getElementById('is-combust').checked;
+
+    let dignityText = "";
+    const dig = db.dignities[p.name_fa];
+    if (dig) {
+        if (dig.ruling === s.name_fa) dignityText = "\n👑 وضعیت ذاتی: حاکمیت (Ruling) - انرژی سیاره در خالصترین و قدرتمندترین حالت خود قرار دارد.";
+        else if (dig.exaltation === s.name_fa) dignityText = "\n⭐ وضعیت شرف (Exaltation): نقطه اوج شکوفایی و کیفیت متعالی سیاره که فرد را از استعدادها و موهبتهای برجستهای برخوردار میسازد.";
+        else if (dig.detriment === s.name_fa) dignityText = "\n⚠️ وضعیت تبعید (Detriment): چالش در ابراز آسان، طبیعی و مستقیم انرژی سیاره.";
+        else if (dig.fall === s.name_fa) dignityText = "\n⬇️ وضعیت سقوط (Fall): نشانگر چالش ساختاری عمیق یا نقطه ضعفی است که از طریق آگاهی، صبر و تمرین قابل ترمیم و تعالی است.";
+    }
+
+    let combustionText = "";
+    if (isCombust) {
+        combustionText = "\n🔥 وضعیت احتراق (Combustion): این سیاره در فاصله زوایهای کمتر از ۸ تا ۱۰ درجه نسبت به خورشید قرار گرفته و در شعاع نور خورشید سوخته است؛ لذا توان ابراز مستقیم و مستقل انرژی خود را تا حد زیادی از دست داده است.";
+    }
+
+    let text = `«من نیاز به ${p.needs.join(' و ')} (${p.name_fa}) را با سبک ${s.keywords.join('، ')} (برج ${s.name_fa}) در ${h.title} (خانه ${h.number}) ایفا میکنم.»\n\n`;
+    text += `🔹 سوال بنیادی: ${p.question}\n`;
+    text += `🌿 بستر مزاجی برج: ${s.temp}${dignityText}${combustionText}\n`;
+    text += `⚠️ چالش و سایه روانی: ${p.shadow}`;
+
+    document.getElementById('planet-final-text').value = text;
+    document.getElementById('planet-analysis-preview').style.display = 'block';
 }
 
 function savePlanetData() {
@@ -439,27 +774,47 @@ function savePlanetData() {
         planet: pName,
         sign: document.getElementById('select-sign').value,
         house: document.getElementById('select-house').value,
-        aspect: document.getElementById('select-aspect').value,
-        text: document.getElementById('final-user-text').value
+        isCombust: document.getElementById('is-combust').checked,
+        text: document.getElementById('planet-final-text').value
     };
-
-    localStorage.setItem('userOfflineAstrologyChart_v2', JSON.stringify(userChart));
     renderPlanetGrid();
-    alert(`اطلاعات مربوط به سیاره «${pName}» با موفقیت ثبت گردید.`);
+    alert(`اطلاعات ${pName} با موفقیت در چارت ثبت شد.`);
 }
 
 function renderPlanetGrid() {
     const grid = document.getElementById('planet-grid');
     grid.innerHTML = '';
+    
+    let houseCounts = {};
     db.planets.forEach(p => {
-        const data = userChart[p.name_fa];
-        const isFilled = data ? 'active' : '';
-        const statusText = data ? `برج ${data.sign} | خانه ${data.house}` : 'ثبت‌نشده';
-        
+        const item = userChart[p.name_fa];
+        if (item) {
+            houseCounts[item.house] = (houseCounts[item.house] || 0) + 1;
+        }
+    });
+
+    let stelliumHouses = [];
+    for (let h in houseCounts) {
+        if (houseCounts[h] >= 3) {
+            stelliumHouses.push(`خانه ${h} (${houseCounts[h]} سیاره/نقطه)`);
+        }
+    }
+
+    const alertBox = document.getElementById('stellium-alert');
+    if (stelliumHouses.length > 0) {
+        alertBox.innerHTML = `<div style="background:#fee2e2; color:#991b1b; padding:8px; border-radius:6px; font-size:0.85rem; font-weight:bold;">⚠️ الگوی استلیوم کشف شد در: ${stelliumHouses.join(', ')} (تمرکز شدید انرژی)</div>`;
+    } else {
+        alertBox.innerHTML = '';
+    }
+
+    db.planets.forEach(p => {
+        const item = userChart[p.name_fa];
+        const activeClass = item ? 'active' : '';
+        const label = item ? `${item.sign} | خانه ${item.house}` : 'ثبتنشده';
         grid.innerHTML += `
-            <div class="planet-btn ${isFilled}" onclick="selectPlanetFromGrid('${p.name_fa}')">
+            <div class="planet-btn ${activeClass}" onclick="selectPlanetFromGrid('${p.name_fa}')">
                 <strong>${p.symbol} ${p.name_fa}</strong>
-                <span class="status-tag">${statusText}</span>
+                <div style="font-size:0.75rem; margin-top:4px;">${label}</div>
             </div>
         `;
     });
@@ -467,136 +822,327 @@ function renderPlanetGrid() {
 
 function selectPlanetFromGrid(pName) {
     document.getElementById('select-planet').value = pName;
-    loadPlanetDataIfExist();
+    loadPlanetDataIfExists();
 }
 
-function loadPlanetDataIfExist() {
+function loadPlanetDataIfExists() {
     const pName = document.getElementById('select-planet').value;
-    if(userChart[pName]) {
+    if (userChart[pName]) {
         document.getElementById('select-sign').value = userChart[pName].sign;
         document.getElementById('select-house').value = userChart[pName].house;
-        document.getElementById('select-aspect').value = userChart[pName].aspect || "";
-        document.getElementById('final-user-text').value = userChart[pName].text;
-        document.getElementById('analysis-preview').style.display = 'block';
+        document.getElementById('is-combust').checked = userChart[pName].isCombust || false;
+        document.getElementById('planet-final-text').value = userChart[pName].text;
+        document.getElementById('planet-analysis-preview').style.display = 'block';
     } else {
-        document.getElementById('analysis-preview').style.display = 'none';
+        document.getElementById('is-combust').checked = false;
+        document.getElementById('planet-analysis-preview').style.display = 'none';
     }
+    checkPlanetDignity();
 }
 
-function loadFromLocalStorage() {
-    const savedChart = localStorage.getItem('userOfflineAstrologyChart_v2');
-    if(savedChart) {
-        userChart = JSON.parse(savedChart);
+function analyzeAspect() {
+    const p1 = document.getElementById('aspect-p1').value;
+    const p2 = document.getElementById('aspect-p2').value;
+    const aspName = document.getElementById('aspect-type').value;
+
+    if (p1 === p2) { 
+        alert("لطفاً دو نقطه یا سیاره متفاوت انتخاب کنید."); 
+        return; 
     }
-    const savedClient = localStorage.getItem('userOfflineAstrologyClient_v2');
-    if(savedClient) {
-        clientInfo = JSON.parse(savedClient);
-        document.getElementById('client-name').value = clientInfo.name || '';
-        document.getElementById('client-dob').value = clientInfo.dob || '';
-        document.getElementById('client-tob').value = clientInfo.tob || '';
-    }
+
+    const aspObj = db.aspects.find(a => a.name === aspName);
+    const infoP1 = db.planets.find(x => x.name_fa === p1);
+    const infoP2 = db.planets.find(x => x.name_fa === p2);
+
+    let text = `🔹 <strong>جنبه ${aspObj.name}</strong> بین <strong>${p1}</strong> و <strong>${p2}</strong>\n`;
+    text += `• طبیعت و ماهیت جنبه: ${aspObj.nature}\n`;
+    text += `• تفسیر تفصیلی روانشناختی: ${aspObj.interpretation}\n`;
+    text += `• کارکرد نقطه اول (${p1}): ${infoP1 ? infoP1.core : 'نقطه کلیدی چارت'}\n`;
+    text += `• کارکرد نقطه دوم (${p2}): ${infoP2 ? infoP2.core : 'نقطه کلیدی چارت'}`;
+
+    window.currentAspectAnalysisText = text;
+
+    document.getElementById('aspect-details').innerHTML = text.replace(/\n/g, '<br>');
+    document.getElementById('aspect-preview').style.display = 'block';
 }
 
-function clearAllData() {
-    if(confirm('آیا مطمئن هستید که کل اطلاعات سیارات و مشخصات فردی پاک شود؟')) {
-        userChart = {};
-        clientInfo = {};
-        localStorage.removeItem('userOfflineAstrologyChart_v2');
-        localStorage.removeItem('userOfflineAstrologyClient_v2');
-        document.getElementById('client-name').value = '';
-        document.getElementById('client-dob').value = '';
-        document.getElementById('client-tob').value = '';
-        renderPlanetGrid();
-        document.getElementById('analysis-preview').style.display = 'none';
-    }
+function saveAspectData() {
+    const p1 = document.getElementById('aspect-p1').value;
+    const p2 = document.getElementById('aspect-p2').value;
+    const aspName = document.getElementById('aspect-type').value;
+    const analysisText = window.currentAspectAnalysisText || `جنبه ${aspName} بین ${p1} و ${p2}`;
+
+    userAspects.push({ p1, p2, aspect: aspName, analysisText });
+    renderAspectsList();
+    alert("جنبه با موفقیت ذخیره شد و در گزارش پرونده ثبت گردید!");
 }
 
-function exportFullChartHTML() {
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString('fa-IR');
-    const formattedTime = now.toLocaleTimeString('fa-IR');
-    
-    const clientName = document.getElementById('client-name').value || 'ثبت‌نشده';
-    const clientDob = document.getElementById('client-dob').value || 'ثبت‌نشده';
-    const clientTob = document.getElementById('client-tob').value || 'ثبت‌نشده';
+function deleteAspect(index) {
+    userAspects.splice(index, 1);
+    renderAspectsList();
+}
 
-    let htmlContent = `
-    <!DOCTYPE html>
-    <html lang="fa" dir="rtl">
-    <head>
-        <meta charset="UTF-8">
-        <title>گزارش تحلیل کامل چارت شخصی - ${clientName}</title>
-        <style>
-            body { font-family: 'Tahoma', sans-serif; background: #f8fafc; padding: 20px; line-height: 1.8; direction: rtl; color: #1e293b; }
-            .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-            h1 { text-align: center; color: #0f172a; border-bottom: 3px solid #d97706; padding-bottom: 10px; font-size: 1.4rem; margin-bottom:5px; }
-            .sub-header { text-align:center; font-size:0.85rem; color:#64748b; margin-bottom:15px; }
-            .info-box { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 12px 18px; border-radius: 8px; margin-bottom: 25px; font-size: 0.9rem; }
-            .info-box table { width: 100%; border-collapse: collapse; }
-            .info-box td { padding: 4px 8px; }
-            .planet-section { background: #fafafa; border: 1px solid #e2e8f0; margin-bottom: 20px; padding: 16px; border-radius: 10px; }
-            .planet-header { font-size: 1.15rem; color: #0284c7; font-weight: bold; border-bottom: 2px solid #0284c7; padding-bottom: 5px; margin-bottom: 12px; }
-            .meta { font-size: 0.85rem; color: #475569; margin-bottom: 8px; background: #e2e8f0; padding: 4px 10px; border-radius: 6px; display: inline-block; }
-            .content { white-space: pre-line; font-size: 0.9rem; margin-top: 10px; }
-            .empty-msg { font-size: 0.85rem; color: #94a3b8; font-style: italic; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>📘 سامانه تحلیل چارت آسترولوژی</h1>
-            <div class="sub-header">
-                مبتنی بر: آموزه‌های استاد صالحی<br>
-                تهیه‌کننده: حسین مسعودیان
-            </div>
-            
-            <div class="info-box">
-                <table>
-                    <tr>
-                        <td><strong>👤 نام متقاضی:</strong> ${clientName}</td>
-                        <td><strong>📅 تاریخ تولد:</strong> ${clientDob}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>⏰ ساعت و محل تولد:</strong> ${clientTob}</td>
-                        <td><strong>🕒 تاریخ صدور گزارش:</strong> ${formattedDate} (ساعت ${formattedTime})</td>
-                    </tr>
-                </table>
-            </div>
-    `;
-
-    // پیمایش سیارات دقیقاً به ترتیب ۱۰ سیاره استاندارد
-    db.planets.forEach(pInfo => {
-        const pName = pInfo.name_fa;
-        const item = userChart[pName];
-
-        htmlContent += `
-            <div class="planet-section">
-                <div class="planet-header">
-                    ${pInfo.symbol} سیاره ${pName}
+function renderAspectsList() {
+    const container = document.getElementById('saved-aspects-list');
+    if (userAspects.length === 0) {
+        container.innerHTML = '<p style="font-size:0.85rem; color:#94a3b8;">هنوز جنبهای ثبت نشده است.</p>';
+        return;
+    }
+    container.innerHTML = '';
+    userAspects.forEach((a, idx) => {
+        container.innerHTML += `
+            <div style="padding:12px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:6px; margin-bottom:10px; font-size:0.85rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-weight:bold; margin-bottom:6px; color:var(--accent-color);">
+                    <span>📌 ${a.p1} در جنبه ${a.aspect} با ${a.p2}</span>
+                    <button onclick="deleteAspect(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 10px; border-radius:4px; cursor:pointer;">❌ حذف</button>
                 </div>
-        `;
+                <div style="color:var(--text-color); font-size:0.82rem; white-space:pre-line; line-height:1.6; background:var(--border-color); padding:8px; border-radius:4px;">${a.analysisText.replace(/<br>/g, '\n')}</div>
+            </div>`;
+    });
+}
 
-        if (item) {
-            htmlContent += `
-                <div class="meta">
-                    قرارگیری در: <strong>برج ${item.sign}</strong> | <strong>خانه ${item.house}</strong> ${item.aspect ? `| جنبه: ${item.aspect}` : ''}
-                </div>
-                <div class="content">${item.text}</div>
-            `;
+function calculateHemispheresAndTemperament() {
+    const fire = parseFloat(document.getElementById('score-fire').value) || 0;
+    const earth = parseFloat(document.getElementById('score-earth').value) || 0;
+    const air = parseFloat(document.getElementById('score-air').value) || 0;
+    const water = parseFloat(document.getElementById('score-water').value) || 0;
+
+    const hot = fire + air;
+    const cold = earth + water;
+    const wet = water + air;
+    const dry = fire + earth;
+
+    document.getElementById('res-hot').innerText = hot;
+    document.getElementById('res-cold').innerText = cold;
+    document.getElementById('res-wet').innerText = wet;
+    document.getElementById('res-dry').innerText = dry;
+
+    const tempKey = (hot >= cold ? 'گرم' : 'سرد') + ' و ' + (wet > dry ? 'تر' : 'خشک');
+    let humor = "";
+    if (tempKey === "گرم و خشک") humor = "صفراوی (آتش)";
+    if (tempKey === "سرد و خشک") humor = "سوداوی (خاک)";
+    if (tempKey === "گرم و تر") humor = "دموی (هوا)";
+    if (tempKey === "سرد و تر") humor = "بلغمی (آب)";
+
+    // بررسی کیفیتهای سهگانه
+    const cardinal = parseFloat(document.getElementById('score-cardinal').value) || 0;
+    const fixed = parseFloat(document.getElementById('score-fixed').value) || 0;
+    const mutable = parseFloat(document.getElementById('score-mutable').value) || 0;
+
+    let qualityDominant = "متعادل";
+    let maxQ = Math.max(cardinal, fixed, mutable);
+    let qualityDesc = "";
+
+    if (maxQ > 0) {
+        if (cardinal === maxQ && cardinal !== fixed && cardinal !== mutable) {
+            qualityDominant = "آغازگر (Cardinal / کاردینال)";
+            qualityDesc = "<strong>⚡ غلبه کیفیت آغازگر:</strong> نماد شروع، پیشگامی، رهبری و ایجاد حرکت و تغییر. فرد از راه اندازی کارهای جدید لذت میبرد.<br><em>چالش اصلی:</em> نیمهکاره رها کردن کارها و کمصبری.<br><em>راهکار تعادل:</em> تقویت صبر، استقامت و استمرار تا مرحله نهایی کار.";
+        } else if (fixed === maxQ && fixed !== cardinal && fixed !== mutable) {
+            qualityDominant = "ثابت (Fixed / فیکس)";
+            qualityDesc = "<strong>🛡️ غلبه کیفیت ثابت:</strong> نماد پایداری، استمرار، پشتکار و حفظ ساختار. فرد اراده و تمرکز بسیار قوی در حفظ دستاوردها دارد.<br><em>چالش اصلی:</em> لجاجت و مقاومت در برابر تغییرات مفید.<br><em>راهکار تعادل:</em> تمرین انعطافپذیری و پذیرش این نکته که گاهی رها کردن و تغییر مسیر نشانه بلوغ است.";
+        } else if (mutable === maxQ && mutable !== cardinal && mutable !== fixed) {
+            qualityDominant = "متغیر (Mutable / موتابل)";
+            qualityDesc = "<strong>🌊 غلبه کیفیت متغیر:</strong> نماد انعطافپذیری، سازگاری و تطبیق با شرایط گوناگون. فرد به زیبایی با شرایط هماهنگ میشود.<br><em>چالش اصلی:</em> پراکندگی ذهنی، بیثباتی و دشواری در حفظ تمرکز طولانی.<br><em>راهکار تعادل:</em> تمرکز بر یک هدف مشخص و استمرار در به پایان رساندن پروژهها.";
         } else {
-            htmlContent += `<div class="empty-msg">اطلاعاتی برای این سیاره ثبت نشده است.</div>`;
+            qualityDominant = "ترکیبی و تعادل نسبی کیفیتها";
+            qualityDesc = "<strong>⚖️ تعادل کیفیتها:</strong> نشانگر توانایی فرد در بهرهگیری متناسب از هر سه ریتم آغاز، پایداری و سازگاری در مراحل مختلف زندگی.";
+        }
+    } else {
+        qualityDesc = "امتیاز کیفیتهای سهگانه وارد نشده است.";
+    }
+
+    document.getElementById('res-quality-dominant').innerText = qualityDominant;
+    document.getElementById('quality-analysis-box').innerHTML = qualityDesc;
+
+    temperamentData = { tempKey, humor, hot, cold, wet, dry, qualityDominant, qualityDesc };
+    document.getElementById('res-final').innerText = `${tempKey} - خلط غالب: ${humor}`;
+
+    const upper = parseInt(document.getElementById('hemi-upper').value) || 0;
+    const lower = parseInt(document.getElementById('hemi-lower').value) || 0;
+    const east = parseInt(document.getElementById('hemi-east').value) || 0;
+    const west = parseInt(document.getElementById('hemi-west').value) || 0;
+
+    let hemiText = `<strong>تحلیل نیمکرهها (جهتگیری کلی شخصیت):</strong><br>`;
+    hemiText += `• نیمکره فوقانی (${upper} سیاره) در مقابل تحتانی (${lower} سیاره): ${upper > lower ? 'برونگرایی، حضور در عرصه عمومی، تمایل به دیدهشدن و مسئولیتپذیری اجتماعی.' : 'درونگرایی، تمرکز بر زندگی شخصی، خلوت روان و حریم خانواده.'}<br>`;
+    hemiText += `• نیمکره شرقی (${east} سیاره) در مقابل غربی (${west} سیاره): ${east > west ? 'استقلال فردی بالا، خودآغازگری و ساختن مسیر زندگی به دست خود.' : 'رابطهمحوری، رشد از طریق تعامل با دیگران و تاثیرپذیری از شراکتها.'}`;
+
+    document.getElementById('hemi-analysis-text').innerHTML = hemiText;
+    document.getElementById('temperament-result').style.display = 'block';
+}
+
+function calculateFullMezag() {
+    const fire = parseFloat(document.getElementById('mezag-fire').value) || 0;
+    const earth = parseFloat(document.getElementById('mezag-earth').value) || 0;
+    const air = parseFloat(document.getElementById('mezag-air').value) || 0;
+    const water = parseFloat(document.getElementById('mezag-water').value) || 0;
+
+    const hot = fire + air;
+    const cold = earth + water;
+    const wet = water + air;
+    const dry = fire + earth;
+
+    document.getElementById('m-hot').innerText = hot;
+    document.getElementById('m-cold').innerText = cold;
+    document.getElementById('m-wet').innerText = wet;
+    document.getElementById('m-dry').innerText = dry;
+
+    const tempTemp = (hot >= cold) ? 'گرم' : 'سرد';
+    const tempMoist = (wet > dry) ? 'تر' : 'خشک';
+    const finalResultKey = `${tempTemp} و ${tempMoist}`;
+
+    document.getElementById('m-final').innerText = finalResultKey;
+
+    const tbody = document.getElementById('fullTemperamentTableBody');
+    tbody.innerHTML = '';
+
+    const temperamentDatabase = [
+        { key: 'گرم و خشک', qualities: 'گرمی + خشکی', humor: 'صفراوی', element: 'آتش 🔥', physical: 'متابولیسم بالا و کالریسوزی سریع', features: 'انرژی و حرارت بالا، فعالیت و تحرک' },
+        { key: 'سرد و خشک', qualities: 'سردی + خشکی', humor: 'سوداوی', element: 'خاک 🌍', physical: 'تراکم استخوانی و ساختار سخت بدن', features: 'ثبات، تراکم و ساختار بیشتر' },
+        { key: 'گرم و تر', qualities: 'گرمی + تری', humor: 'دموی', element: 'هوا 🌬️', physical: 'گردش خون قوی و حجم تنفسی بالا', features: 'گردش و جریان، پویایی و ارتباط' },
+        { key: 'سرد و تر', qualities: 'سردی + تری', humor: 'بلغمی', element: 'آب 💧', physical: 'سیستم لنفاوی فعال و احتباس مایعات', features: 'رطوبت، سیالیت و احتباس' }
+    ];
+
+    temperamentDatabase.forEach(item => {
+        const isSelected = item.key === finalResultKey;
+        const row = document.createElement('tr');
+        if (isSelected) {
+            row.style.backgroundColor = 'var(--warning-bg)';
+            row.style.fontWeight = 'bold';
         }
 
-        htmlContent += `</div>`;
+        row.innerHTML = `
+            <td>${item.key} ${isSelected ? '✅' : ''}</td>
+            <td>${item.qualities}</td>
+            <td>${item.humor}</td>
+            <td>${item.element}</td>
+            <td>${item.physical}</td>
+            <td>${item.features}</td>
+        `;
+        tbody.appendChild(row);
     });
 
-    htmlContent += `</div></body></html>`;
+    document.getElementById('full-mezag-result').style.display = 'block';
+}
 
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Astrology_Analysis_${clientName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.html`;
-    a.click();
+function saveClientInfo() {
+    clientInfo = {
+        name: document.getElementById('client-name').value,
+        dob: document.getElementById('client-dob').value,
+        tob: document.getElementById('client-tob').value
+    };
+}
+
+function exportBackupJSON() {
+    saveClientInfo();
+    const backupData = {
+        clientInfo,
+        userChart,
+        userAspects,
+        temperamentData
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `Astrology_Backup_${clientInfo.name || 'Chart'}.json`);
+    dlAnchor.click();
+}
+
+function importBackupJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            clientInfo = data.clientInfo || {};
+            userChart = data.userChart || {};
+            userAspects = data.userAspects || [];
+            temperamentData = data.temperamentData || {};
+
+            document.getElementById('client-name').value = clientInfo.name || '';
+            document.getElementById('client-dob').value = clientInfo.dob || '';
+            document.getElementById('client-tob').value = clientInfo.tob || '';
+
+            renderPlanetGrid();
+            renderAspectsList();
+            alert("فایل پشتیبان با موفقیت بارگذاری شد!");
+        } catch (err) {
+            alert("خطا در خواندن فایل JSON.");
+        }
+    };
+    reader.readAsText(file);
+}
+
+function updateReportView() {
+    saveClientInfo();
+    document.getElementById('report-client-info').innerHTML = `
+        <strong>نام متقاضی:</strong> ${clientInfo.name || 'ثبتنشده'} | 
+        <strong>تاریخ تولد:</strong> ${clientInfo.dob || 'ثبتنشده'} | 
+        <strong>محل تولد:</strong> ${clientInfo.tob || 'ثبتنشده'}
+    `;
+
+    if (temperamentData.tempKey) {
+        document.getElementById('report-element-hemi').innerHTML = `
+            <strong>مزاج غالب:</strong> ${temperamentData.tempKey} (${temperamentData.humor})<br>
+            <strong>کیفیت غالب ریتم عملکرد:</strong> ${temperamentData.qualityDominant || 'ثبتنشده'}<br>
+            <div style="margin-top:5px; font-size:0.85rem;">${temperamentData.qualityDesc || ''}</div>
+            <small>امتیازات - گرمی: ${temperamentData.hot} | سردی: ${temperamentData.cold} | تری: ${temperamentData.wet} | خشکی: ${temperamentData.dry}</small>
+        `;
+    }
+
+    let houseCounts = {};
+    for (let p in userChart) {
+        let h = userChart[p].house;
+        houseCounts[h] = (houseCounts[h] || 0) + 1;
+    }
+    let stelliumText = "";
+    for (let h in houseCounts) {
+        if (houseCounts[h] >= 3) stelliumText += `• تمرکز ${houseCounts[h]} سیاره در خانه ${h} (تشکیل استلیوم و تمرکز شدید انرژی در این عرصه).<br>`;
+    }
+    document.getElementById('report-stellium-info').innerHTML = stelliumText || 'هیچ استلیومی ثبت نشده است.';
+
+    const sun = userChart["خورشید"];
+    const moon = userChart["ماه"];
+    const ac = userChart["طالع (Ascendant / AC)"];
+    let synthHtml = "";
+    if (sun || moon || ac) {
+        synthHtml = `• <strong>خورشید (هویت و منِ آگاه):</strong> ${sun ? `برج ${sun.sign}، خانه ${sun.house}` : 'ثبتنشده'}<br>` +
+                    `• <strong>ماه (احساسات و منِ ناخودآگاه):</strong> ${moon ? `برج ${moon.sign}، خانه ${moon.house}` : 'ثبتنشده'}<br>` +
+                    `• <strong>طالع / AC (ویترین شخصیت و ورود به جهان):</strong> ${ac ? `برج ${ac.sign}، خانه ${ac.house}` : 'ثبتنشده'}`;
+    } else {
+        synthHtml = "اطلاعات خورشید، ماه یا طالع ثبت نشده است.";
+    }
+    document.getElementById('report-synthesis').innerHTML = synthHtml;
+
+    let planetsHtml = '';
+    for (let pName in userChart) {
+        const item = userChart[pName];
+        planetsHtml += `
+            <div style="border:1px solid var(--border-color); padding:10px; border-radius:6px; margin-bottom:10px;">
+                <strong>سیاره / نقطه ${pName}:</strong> برج ${item.sign} | خانه ${item.house} ${item.isCombust ? '<span style="color:#c2410c; font-weight:bold;">(🔥 دچار احتراق)</span>' : ''}
+                <div style="white-space:pre-line; font-size:0.85rem; margin-top:5px; color:#475569;">${item.text}</div>
+            </div>
+        `;
+    }
+    document.getElementById('report-planets-list').innerHTML = planetsHtml || 'سیارهای ثبت نشده است.';
+
+    let aspectsHtml = '';
+    userAspects.forEach(a => {
+        aspectsHtml += `
+            <div style="font-size:0.85rem; margin-bottom:8px; padding:8px; background:var(--border-color); border-radius:4px;">
+                <strong>📌 ${a.p1}</strong> در جنبه <strong>${a.aspect}</strong> با <strong>${a.p2}</strong>
+                <div style="color:#475569; font-size:0.8rem; white-space:pre-line; margin-top:4px;">${a.analysisText.replace(/<br>/g, '\n')}</div>
+            </div>`;
+    });
+    document.getElementById('report-aspects-list').innerHTML = aspectsHtml || 'جنبهای ثبت نشده است.';
+
+    const mc = userChart["سقف آسمان (Midheaven / MC)"];
+    if (mc) {
+        document.getElementById('report-mc-info').innerHTML = `
+            <strong>موقعیت MC (سقف آسمان):</strong> برج ${mc.sign} در خانه ${mc.house}<br>
+            <strong>تحلیل مسیر شغلی و رسالت فردی:</strong> نشاندهنده پرستیژ اجتماعی و اهداف بلندمدت فرد در برج ${mc.sign} است. سیاره حاکم این برج تعیینکننده اصلی مسیر شغلی و موفقیت اجتماعی فرد خواهد بود.
+        `;
+    }
 }
 
 window.onload = init;
